@@ -57,68 +57,46 @@ export default function App() {
   }, [])
 
   return (
-    <div
-      className="w-screen h-[100dvh] bg-black flex flex-col overflow-hidden"
-      style={{ paddingTop: 'env(safe-area-inset-top)' }}
-    >
-      {/* ── HEADER ── */}
-      <div className="flex items-center justify-between px-4 py-2 shrink-0">
-        <div>
-          <p
-            className="text-red-400 font-black text-base leading-none tracking-widest"
-            style={{ fontFamily: 'Orbitron, sans-serif' }}
-          >
-            XI INICIAL
-          </p>
-          <p
-            className="text-white/40 text-[10px] tracking-widest mt-0.5"
-            style={{ fontFamily: 'Orbitron, sans-serif' }}
-          >
-            {formation}
-          </p>
-        </div>
+    <div className="w-screen h-[100dvh] overflow-hidden relative">
+      {/* Campo ocupa toda la pantalla, centrado con barras negras arriba/abajo */}
+      <Field
+        players={players}
+        onMove={handleMove}
+        onUpdate={handleUpdate}
+        fieldRef={fieldRef}
+      />
 
-        {/* Hint center */}
-        <p
-          className="text-white/25 text-[8px] tracking-widest text-center"
-          style={{ fontFamily: 'Orbitron, sans-serif' }}
-        >
-          TAP EDITAR{'\n'}DRAG MOVER
-        </p>
-
-        {/* Spacer to balance */}
-        <div className="w-[72px]" />
-      </div>
-
-      {/* ── CAMPO ── flex-1 para llenar todo el espacio disponible */}
-      <div className="flex-1 flex items-center justify-center overflow-hidden">
-        <Field
-          players={players}
-          onMove={handleMove}
-          onUpdate={handleUpdate}
-          fieldRef={fieldRef}
-        />
-      </div>
-
-      {/* ── BOTTOM BAR ── donde los pulgares llegan fácil */}
+      {/* ── BARRA INFERIOR — sobre el espacio negro debajo del campo ── */}
       <div
-        className="shrink-0 flex items-center justify-around px-6 py-3 border-t border-red-500/20 bg-black"
-        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 12px)' }}
+        className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-4 py-3 bg-black/80 backdrop-blur-sm border-t border-red-500/20"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 14px)' }}
       >
-        {/* Exportar */}
         <ExportButton fieldRef={fieldRef} />
-
-        {/* Formación */}
         <FormationSelector current={formation} onChange={handleFormationChange} />
-
-        {/* Reset */}
         <button
           onClick={handleReset}
-          className="flex items-center gap-1.5 bg-black/60 border border-red-500/50 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-600/20 transition-colors active:scale-95"
+          className="bg-black/60 border border-red-500/50 text-white text-xs font-bold px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
           style={{ fontFamily: 'Orbitron, sans-serif' }}
         >
           RST
         </button>
+      </div>
+
+      {/* ── BADGE XI INICIAL — esquina superior izquierda con safe area ── */}
+      <div
+        className="fixed top-0 left-0 pointer-events-none"
+        style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)', paddingLeft: '12px' }}
+      >
+        <div className="bg-black/50 backdrop-blur-sm border border-red-500/30 rounded-lg px-3 py-1.5">
+          <p className="text-red-400 font-black text-xs tracking-widest leading-none"
+             style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            XI INICIAL
+          </p>
+          <p className="text-white/40 text-[9px] tracking-widest mt-0.5"
+             style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            {formation}
+          </p>
+        </div>
       </div>
     </div>
   )
