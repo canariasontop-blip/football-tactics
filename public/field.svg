@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 812" preserveAspectRatio="xMidYMid meet">
+  <!-- Background green -->
+  <rect width="375" height="812" fill="#2d6a1f"/>
+  <!-- Grass stripes -->
+  <rect x="0" y="0" width="375" height="68" fill="#326f22" opacity="0.6"/>
+  <rect x="0" y="136" width="375" height="68" fill="#326f22" opacity="0.6"/>
+  <rect x="0" y="272" width="375" height="68" fill="#326f22" opacity="0.6"/>
+  <rect x="0" y="408" width="375" height="68" fill="#326f22" opacity="0.6"/>
+  <rect x="0" y="544" width="375" height="68" fill="#326f22" opacity="0.6"/>
+  <rect x="0" y="680" width="375" height="68" fill="#326f22" opacity="0.6"/>
+
+  <!-- Field outline -->
+  <rect x="20" y="40" width="335" height="732" fill="none" stroke="white" stroke-width="2.5"/>
+
+  <!-- Halfway line -->
+  <line x1="20" y1="406" x2="355" y2="406" stroke="white" stroke-width="2"/>
+
+  <!-- Center circle -->
+  <circle cx="187.5" cy="406" r="55" fill="none" stroke="white" stroke-width="2"/>
+  <circle cx="187.5" cy="406" r="3" fill="white"/>
+
+  <!-- Top penalty area -->
+  <rect x="82" y="40" width="211" height="120" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Top goal area -->
+  <rect x="127" y="40" width="121" height="50" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Top goal -->
+  <rect x="150" y="28" width="75" height="14" fill="none" stroke="white" stroke-width="2.5"/>
+
+  <!-- Top penalty spot -->
+  <circle cx="187.5" cy="130" r="3" fill="white"/>
+
+  <!-- Top penalty arc -->
+  <path d="M 130 160 A 55 55 0 0 1 245 160" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Bottom penalty area -->
+  <rect x="82" y="652" width="211" height="120" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Bottom goal area -->
+  <rect x="127" y="722" width="121" height="50" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Bottom goal -->
+  <rect x="150" y="770" width="75" height="14" fill="none" stroke="white" stroke-width="2.5"/>
+
+  <!-- Bottom penalty spot -->
+  <circle cx="187.5" cy="682" r="3" fill="white"/>
+
+  <!-- Bottom penalty arc -->
+  <path d="M 130 652 A 55 55 0 0 0 245 652" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Corner arcs top-left -->
+  <path d="M 20 58 A 18 18 0 0 1 38 40" fill="none" stroke="white" stroke-width="2"/>
+  <!-- Corner arcs top-right -->
+  <path d="M 337 40 A 18 18 0 0 1 355 58" fill="none" stroke="white" stroke-width="2"/>
+  <!-- Corner arcs bottom-left -->
+  <path d="M 20 754 A 18 18 0 0 0 38 772" fill="none" stroke="white" stroke-width="2"/>
+  <!-- Corner arcs bottom-right -->
+  <path d="M 337 772 A 18 18 0 0 0 355 754" fill="none" stroke="white" stroke-width="2"/>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#000000"/>
+  <!-- Jersey shape -->
+  <path
+    d="M 96 160 L 16 240 L 96 275 L 96 440 L 416 440 L 416 275 L 496 240 L 416 160
+       C 390 80 310 120 256 150
+       C 202 120 122 80 96 160 Z"
+    fill="#0d0d0d"
+    stroke="#FF0000"
+    stroke-width="14"
+    stroke-linejoin="round"
+  />
+  <!-- Number -->
+  <text
+    x="256" y="390"
+    text-anchor="middle"
+    font-size="160"
+    font-weight="900"
+    font-family="Arial Black, sans-serif"
+    fill="white"
+  >11</text>
+</svg>
