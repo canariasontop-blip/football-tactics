@@ -25,7 +25,6 @@ export default function App() {
   const fieldRef = useRef(null)
   const saveTimer = useRef(null)
 
-  // debounced persistence
   useEffect(() => {
     clearTimeout(saveTimer.current)
     saveTimer.current = setTimeout(() => {
@@ -58,51 +57,68 @@ export default function App() {
   }, [])
 
   return (
-    <div className="w-screen h-[100dvh] overflow-hidden relative">
-      <Field
-        players={players}
-        onMove={handleMove}
-        onUpdate={handleUpdate}
-        fieldRef={fieldRef}
-      />
-
-      {/* ── Top-left: XI INICIAL ── */}
-      <div className="absolute top-3 left-3 z-20 pointer-events-none">
-        <div className="bg-black/40 backdrop-blur-sm border border-red-500/40 rounded-lg px-3 py-1.5">
+    <div
+      className="w-screen h-[100dvh] bg-black flex flex-col overflow-hidden"
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+    >
+      {/* ── HEADER ── */}
+      <div className="flex items-center justify-between px-4 py-2 shrink-0">
+        <div>
           <p
-            className="text-red-400 font-bold text-xs tracking-[0.2em] leading-none"
+            className="text-red-400 font-black text-base leading-none tracking-widest"
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
             XI INICIAL
           </p>
           <p
-            className="text-white/50 text-[9px] tracking-widest mt-0.5"
+            className="text-white/40 text-[10px] tracking-widest mt-0.5"
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
             {formation}
           </p>
         </div>
+
+        {/* Hint center */}
+        <p
+          className="text-white/25 text-[8px] tracking-widest text-center"
+          style={{ fontFamily: 'Orbitron, sans-serif' }}
+        >
+          TAP EDITAR{'\n'}DRAG MOVER
+        </p>
+
+        {/* Spacer to balance */}
+        <div className="w-[72px]" />
       </div>
 
-      {/* ── Top-right: controles ── */}
-      <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+      {/* ── CAMPO ── flex-1 para llenar todo el espacio disponible */}
+      <div className="flex-1 flex items-center justify-center overflow-hidden">
+        <Field
+          players={players}
+          onMove={handleMove}
+          onUpdate={handleUpdate}
+          fieldRef={fieldRef}
+        />
+      </div>
+
+      {/* ── BOTTOM BAR ── donde los pulgares llegan fácil */}
+      <div
+        className="shrink-0 flex items-center justify-around px-6 py-3 border-t border-red-500/20 bg-black"
+        style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 12px)' }}
+      >
+        {/* Exportar */}
         <ExportButton fieldRef={fieldRef} />
+
+        {/* Formación */}
         <FormationSelector current={formation} onChange={handleFormationChange} />
+
+        {/* Reset */}
         <button
           onClick={handleReset}
-          className="bg-black/60 backdrop-blur-sm border border-red-500/50 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-600/20 transition-colors"
+          className="flex items-center gap-1.5 bg-black/60 border border-red-500/50 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-600/20 transition-colors active:scale-95"
           style={{ fontFamily: 'Orbitron, sans-serif' }}
         >
           RST
         </button>
-      </div>
-
-      {/* ── Hint ── */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-        <p className="text-white/30 text-[9px] text-center tracking-widest"
-          style={{ fontFamily: 'Orbitron, sans-serif' }}>
-          TAP · EDITAR &nbsp;|&nbsp; DRAG · MOVER
-        </p>
       </div>
     </div>
   )

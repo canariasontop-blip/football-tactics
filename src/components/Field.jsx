@@ -10,8 +10,6 @@ import { restrictToParentElement } from '@dnd-kit/modifiers'
 import Player from './Player'
 import EditModal from './EditModal'
 
-const FIELD_RATIO = 3 / 4
-
 export default function Field({ players, onMove, onUpdate, fieldRef: externalRef }) {
   const internalRef = useRef(null)
   const fieldRef = externalRef || internalRef
@@ -44,40 +42,34 @@ export default function Field({ players, onMove, onUpdate, fieldRef: externalRef
 
   return (
     <>
-      <div className="w-screen h-[100dvh] bg-black flex items-center justify-center overflow-hidden">
-        <DndContext
-          sensors={sensors}
-          modifiers={[restrictToParentElement]}
-          onDragEnd={handleDragEnd}
+      <DndContext
+        sensors={sensors}
+        modifiers={[restrictToParentElement]}
+        onDragEnd={handleDragEnd}
+      >
+        {/* Campo: ocupa todo el espacio disponible del padre, mantiene ratio 3:4 */}
+        <div
+          ref={fieldRef}
+          className="relative overflow-hidden"
+          style={{
+            aspectRatio: '3 / 4',
+            maxHeight: '100%',
+            maxWidth: '100%',
+            margin: 'auto',
+          }}
         >
-          <div
-            ref={fieldRef}
-            className="relative overflow-hidden"
-            style={{
-              aspectRatio: `${FIELD_RATIO}`,
-              height: `min(100dvh, calc(100vw * ${1 / FIELD_RATIO}))`,
-              width: `min(100vw, calc(100dvh * ${FIELD_RATIO}))`,
-            }}
-          >
-            {/* img como fondo — más fiable que backgroundImage en Vite */}
-            <img
-              src="/campo.jpg"
-              alt=""
-              draggable={false}
-              className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
-              style={{ zIndex: 0 }}
-            />
-
-            {players.map((player) => (
-              <Player
-                key={player.id}
-                player={player}
-                onEdit={handleEdit}
-              />
-            ))}
-          </div>
-        </DndContext>
-      </div>
+          <img
+            src="/campo.jpg"
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
+            style={{ zIndex: 0 }}
+          />
+          {players.map((player) => (
+            <Player key={player.id} player={player} onEdit={handleEdit} />
+          ))}
+        </div>
+      </DndContext>
 
       {editingPlayer && (
         <EditModal
