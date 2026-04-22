@@ -1,79 +1,39 @@
 import { useState, useCallback } from 'react'
 import { toPng } from 'html-to-image'
 
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-
-// Convierte la URL de la imagen a base64 para evitar CORS en el canvas
-async function toDataUrl(url) {
-  const res = await fetch(url)
-  const blob = await res.blob()
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => resolve(reader.result)
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
-  })
-}
-
 export default function ExportButton({ fieldRef }) {
   const [loading, setLoading] = useState(false)
-  const [hint, setHint] = useState(false)
+  const [preview, setPreview] = useState(null) // data URL para el modal
 
   const handleCapture = useCallback(async () => {
     const node = fieldRef.current
     if (!node || loading) return
     setLoading(true)
-    setHint(false)
-
-    // Busca el <img> del campo dentro del contenedor
-    const imgEl = node.querySelector('img')
-    const originalSrc = imgEl?.src
 
     try {
-      // 1. Pre-carga la imagen del campo como base64 (evita CORS)
-      if (imgEl) {
-        const base64 = await toDataUrl('/campo.jpg')
-        imgEl.src = base64
-        // Espera a que el DOM procese el nuevo src
-        await new Promise((r) => setTimeout(r, 100))
-      }
-
-      // 2. Primera pasada para "calentar" el canvas
+      // Primera pasada para que html-to-image precache los recursos
       await toPng(node, { cacheBust: true, pixelRatio: 1 })
-
-      // 3. Captura real a 2× resolución
+      // Segunda pasada: captura real a 2×
       const dataUrl = await toPng(node, { cacheBust: true, pixelRatio: 2 })
-
-      if (isIOS) {
-        // iOS Safari no soporta download — abre en pestaña nueva
-        const win = window.open()
-        win.document.write(
-          `<html><head><title>Alineación</title><meta name="viewport" content="width=device-width"/></head>` +
-          `<body style="margin:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh">` +
-          `<img src="${dataUrl}" style="max-width:100%;max-height:90vh;object-fit:contain"/>` +
-          `<p style="color:white;font-family:sans-serif;font-size:14px;margin-top:12px;text-align:center">` +
-          `Mantén presionado la imagen → <strong>Guardar en fotos</strong></p>` +
-          `</body></html>`
-        )
-        setHint(true)
-      } else {
-        const link = document.createElement('a')
-        link.download = 'alineacion-equipo.png'
-        link.href = dataUrl
-        link.click()
-      }
+      setPreview(dataUrl)
     } catch (err) {
-      console.error('Export failed:', err)
-      alert('Error al exportar. Intenta de nuevo.')
+      console.error('Export error:', err)
+      alert('Error al generar la imagen. Intenta de nuevo.')
     } finally {
-      // Restaura el src original del img
-      if (imgEl && originalSrc) imgEl.src = originalSrc
       setLoading(false)
     }
   }, [fieldRef, loading])
 
+  const handleDownload = useCallback(() => {
+    if (!preview) return
+    const link = document.createElement('a')
+    link.download = 'alineacion-equipo.png'
+    link.href = preview
+    link.click()
+  }, [preview])
+
   return (
-    <div className="flex flex-col items-center gap-1">
+    <>
       <button
         onClick={handleCapture}
         disabled={loading}
@@ -88,13 +48,51 @@ export default function ExportButton({ fieldRef }) {
             <circle cx="12" cy="13" r="4"/>
           </svg>
         )}
-        <span>{loading ? 'GENERANDO...' : 'FOTO'}</span>
+        <span>{loading ? '...' : 'FOTO'}</span>
       </button>
-      {hint && isIOS && (
-        <p className="text-white/50 text-[9px] text-center" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-          Mantén la imagen → Guardar
-        </p>
+
+      {/* Modal de preview — se muestra en la misma página, sin popups */}
+      {preview && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center"
+          style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+        >
+          {/* Imagen capturada */}
+          <img
+            src={preview}
+            alt="Alineación"
+            className="max-h-[75dvh] max-w-full object-contain rounded-xl"
+            style={{ boxShadow: '0 0 40px rgba(255,0,0,0.3)' }}
+          />
+
+          {/* Instrucción iOS */}
+          <p className="text-white/60 text-xs text-center mt-4 px-6"
+             style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            iOS: mantén presionada la imagen → "Guardar en fotos"
+          </p>
+
+          {/* Botones */}
+          <div className="flex gap-4 mt-5">
+            {/* Descargar (funciona en Android/desktop) */}
+            <button
+              onClick={handleDownload}
+              className="flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-5 py-3 rounded-xl active:scale-95 transition-transform"
+              style={{ fontFamily: 'Orbitron, sans-serif' }}
+            >
+              ↓ GUARDAR
+            </button>
+
+            {/* Cerrar */}
+            <button
+              onClick={() => setPreview(null)}
+              className="bg-white/10 border border-white/20 text-white text-xs font-bold px-5 py-3 rounded-xl active:scale-95 transition-transform"
+              style={{ fontFamily: 'Orbitron, sans-serif' }}
+            >
+              CERRAR
+            </button>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   )
 }

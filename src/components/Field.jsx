@@ -52,6 +52,7 @@ export default function Field({ players, onMove, onUpdate, fieldRef: externalRef
             <img
               src="/campo.jpg"
               alt=""
+              crossOrigin="anonymous"
               draggable={false}
               className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
               style={{ zIndex: 0 }}
